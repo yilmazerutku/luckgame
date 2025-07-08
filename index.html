@@ -6,85 +6,126 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 20px;
       background-color: darkgrey;
       color: white;
       text-align: center;
+      padding: 50px;
       text-shadow: 1px 1px 2px black;
       font-size: 20px;
     }
-    #guessB {
-      left: 53%;
-      top: 50%;
-      position: absolute;
-      background-color: lightsalmon;
+
+    input, button {
       font-size: 15px;
-            width: 150px;
-
+      padding: 8px;
+      margin: 5px;
+      border: none;
+      border-radius: 5px;
     }
-    #diamondB {
-      left: 53%;
-      top: 53%;
-      position: absolute;
+
+    #guessT, #diamondT {
+      width: 200px;
+      background-color: lightblue;
+      color: black;
+    }
+
+    #guessB, #diamondB {
       background-color: lightsalmon;
-      font-size: 15px;
-      width: 150px;
     }
 
-    #reset{
-        position: absolute;
-        background-color: rgb(137, 128, 240);
-        left: 90%;
-        top: 95%;
-        color: black;
-        font-size: 15px;
-        width: 150px;
-
-
+    #reset {
+      background-color: rgb(137, 128, 240);
+      color: black;
+      position: absolute;
+      right: 10px;
+      bottom: 10px;
     }
-
 
     #infoB {
-      left: 1%;
-      top: 95%;
-      position: absolute;
       background-color: rgb(129, 255, 70);
-      font-size: 15px;
+      position: absolute;
+      left: 10px;
+      bottom: 10px;
+    }
+
+    #area1b{
+      background-color: rgb(255, 135, 121);
+      
+      height: 30px;
       width: 150px;
     }
-    #guessT {
+
+
+    #mineb {
+      background-color: rgb(254, 237, 0);
       position: absolute;
-      background-color: lightblue;
-      left: 41%;
-      top: 50%;
-      color: black;
-      font-size: 15px;
+      left: 93%;
+      top: 2%;
+      height: 30px;
+      width: 100px;
     }
-    #diamondT {
+
+    #shop {
+      background-color: rgb(214, 64, 44);
       position: absolute;
-      background-color: lightblue;
-      left: 41%;
-      top: 53%;
+      top: 10px;
+      left: 10px;
+      width: 100px;
+    }
+
+    .shopkutucuk, .minekutucuk {
+      border: 2px solid rgba(0, 0, 0, 0.856);
+      background-color: rgb(179, 240, 219);
+      
+      padding: 15px;
+      border-radius: 10px;
+      width: 350px;
+      height: 400px;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      display: none;
       color: black;
-      font-size: 15px;
+      z-index: 100;
     }
   </style>
 </head>
 <body>
 
-  <input id="guessT" type="text" placeholder="Tahminin" />
-  <input id="diamondT" type="text" placeholder="Yatırılan Elmas" />
-  <button id="reset" onclick="resetOyun()">Sıfırla</button>
-  <button id="infoB" onclick="oyunBilgisi()">nasıl oynanır</button>
-  <button id="guessB" onclick="TahminiYakala()">Tahmin Yap</button>
-  <button id="diamondB" onclick="ElmasMiktariniAyarla()">Elmas Miktarı</button>
-
   <h1>Şans Oyunu</h1>
   <h5>1 ile 10 Arasında Bir Sayı Tahmin Et</h5>
+
+  <button id="mineb" onclick="minebox()">Maden</button>
+
+  <div>
+    <input id="guessT" type="text" placeholder="Tahminin" />
+    <button id="guessB" onclick="TahminiYakala()">Tahmin Yap</button>
+  </div>
+
+  <div>
+    <input id="diamondT" type="text" placeholder="Yatırılan Elmas" />
+    <button id="diamondB" onclick="ElmasMiktariniAyarla()">Elmas Miktarı</button>
+  </div>
+
   <p id="puan"></p>
   <p id="tahminSonucu"></p>
   <p id="yatirilanElmasMiktari"></p>
+
+  <button id="reset" onclick="resetOyun()">Sıfırla</button>
+  <button id="infoB" onclick="oyunBilgisi()">Nasıl oynanır?</button>
+
+  <!-- SHOP KUTUSU -->
+  <div class="shopkutucuk">
+    <strong>Dükkan</strong><br><br>
+    Burada gelecekte eşyalar veya güçlendirmeler satılabilir.
+  </div>
+
+  <!-- MADEN KUTUSU -->
+  <div class="minekutucuk">
+    <strong>Maden</strong>
+     <p>Dükkandan Alıp Güçlendirdiğiniz İşçiler Burada Çalışır.</p>
+<button id = "area1b"onclick="window.location.href='https://yilmazerutku.github.io/luckgame-area1/';">Maden 1'e git</button>
+  </div>
 
   <script>
     let puan = 500;
@@ -92,10 +133,6 @@
     let dogruTahminSayisi = 0;
     let tahminSayisi = 0;
     let rastgeleSayi = Math.floor(Math.random() * 10) + 1;
-
-    console.log("Tuttuğum sayı (başlangıç):", rastgeleSayi);
-
-    document.getElementById("puan").textContent = "Puan: " + puan;
 
     function TahminiYakala() {
       const tahmin = parseInt(document.getElementById("guessT").value);
@@ -121,29 +158,16 @@
         dogruTahminSayisi++;
         let kazanilan = dogruTahminSayisi === 1 ? yatirilanElmas * 5 : Math.floor(yatirilanElmas * 1.5);
         puan += kazanilan;
-
-        console.log("✔️ Doğru tahmin! Tahmin:", tahmin);
-        console.log("Kazandığın elmas:", kazanilan);
-        console.log("Yeni toplam puan:", puan);
-
         rastgeleSayi = Math.floor(Math.random() * 10) + 1;
-        console.log("Yeni tutulan sayı:", rastgeleSayi);
-
         tahminSayisi = 0;
         document.getElementById("tahminSonucu").textContent = `Doğru tahmin! Kazandın: ${kazanilan} elmas.`;
       } else {
         dogruTahminSayisi = 0;
         puan -= yatirilanElmas;
-        console.log("❌ Yanlış tahmin:", tahmin);
-        console.log("Kaybedilen elmas:", yatirilanElmas);
-        console.log("Kalan puan:", puan);
-
         document.getElementById("tahminSonucu").textContent = `Yanlış tahmin (${tahmin}). ${yatirilanElmas} elmas kaybettin.`;
       }
 
       document.getElementById("puan").textContent = "Puan: " + puan;
-
-      // localStorage'a kaydet
       verileriKaydet();
     }
 
@@ -155,14 +179,50 @@
       } else {
         yatirilanElmas = giris;
         document.getElementById("yatirilanElmasMiktari").textContent = "Yatırılan Elmas: " + yatirilanElmas;
-        console.log("Yeni yatırılan elmas miktarı:", yatirilanElmas);
       }
-
-      // localStorage'a kaydet
       verileriKaydet();
     }
 
-    // localStorage işlemleri
+    function verileriKaydet() {
+      localStorage.setItem('puan', puan);
+      localStorage.setItem('yatirilanElmas', yatirilanElmas);
+      localStorage.setItem('tahminSayisi', tahminSayisi);
+      localStorage.setItem('rastgeleSayi', rastgeleSayi);
+    }
+
+    function verileriSifirla() {
+      localStorage.clear();
+      puan = 500;
+      yatirilanElmas = 0;
+      tahminSayisi = 0;
+      dogruTahminSayisi = 0;
+      rastgeleSayi = Math.floor(Math.random() * 10) + 1;
+      document.getElementById("puan").textContent = "Puan: " + puan;
+      document.getElementById("yatirilanElmasMiktari").textContent = "Yatırılan Elmas: " + yatirilanElmas;
+    }
+
+    function resetOyun() {
+      if (confirm("Oyunu sıfırlamak istediğinize emin misiniz?")) {
+        verileriSifirla();
+        document.getElementById("tahminSonucu").textContent = "Oyun sıfırlandı. Yeni bir oyun başladı.";
+      }
+    }
+
+    function oyunBilgisi() {
+      alert("1 ile 10 arasında bir sayı tahmin et. En az 50 elmas yatırmalısın. İlk doğru tahminde 5 katı kazanırsın, yanlış tahminde yatırdığın elmas kaybolur.");
+    }
+
+    function toggleShopBox() {
+      const shopkutucuk = document.querySelector('.shopkutucuk');
+      shopkutucuk.style.display = (shopkutucuk.style.display === 'none' || shopkutucuk.style.display === '') ? 'block' : 'none';
+    }
+
+    function minebox() {
+      const minekutucuk = document.querySelector('.minekutucuk');
+      minekutucuk.style.display = (minekutucuk.style.display === 'none' || minekutucuk.style.display === '') ? 'block' : 'none';
+    }
+
+    // Sayfa yüklendiğinde kayıtlı verileri getir
     window.onload = function () {
       const kayitliPuan = localStorage.getItem('puan');
       const kayitliYatirilan = localStorage.getItem('yatirilanElmas');
@@ -173,49 +233,11 @@
       if (kayitliYatirilan !== null) yatirilanElmas = parseInt(kayitliYatirilan);
       if (kayitliTahminSayisi !== null) tahminSayisi = parseInt(kayitliTahminSayisi);
       if (kayitliSayi !== null) rastgeleSayi = parseInt(kayitliSayi);
-
-      console.log("🟡 Oyun yükleniyor...");
-      console.log("Kayıtlı puan:", puan);
-      console.log("Kayıtlı elmas:", yatirilanElmas);
-      console.log("Tuttuğum sayı:", rastgeleSayi);
+      else rastgeleSayi = Math.floor(Math.random() * 10) + 1;
 
       document.getElementById("puan").textContent = "Puan: " + puan;
       document.getElementById("yatirilanElmasMiktari").textContent = "Yatırılan Elmas: " + yatirilanElmas;
     };
-
-    function verileriKaydet() {
-      localStorage.setItem('puan', puan);
-      localStorage.setItem('yatirilanElmas', yatirilanElmas);
-      localStorage.setItem('tahminSayisi', tahminSayisi);
-      localStorage.setItem('rastgeleSayi', rastgeleSayi);
-    }
-
-    // İsteğe bağlı: Sıfırlama fonksiyonu
-    function verileriSifirla() {
-      localStorage.clear();
-      puan = 500;
-      yatirilanElmas = 0;
-      tahminSayisi = 0;
-      rastgeleSayi = Math.floor(Math.random() * 10) + 1;
-
-      console.log("🔁 Veriler sıfırlandı!");
-      console.log("Yeni sayı:", rastgeleSayi);
-
-      document.getElementById("puan").textContent = "Puan: " + puan;
-      document.getElementById("yatirilanElmasMiktari").textContent = "Yatırılan Elmas: " + yatirilanElmas;
-    }
-
-    function resetOyun() {
-      if (confirm("Oyunu sıfırlamak istediğinize emin misiniz?")) {
-        verileriSifirla();
-        document.getElementById("tahminSonucu").textContent = "Oyun sıfırlandı. Yeni bir oyun başladıı.";
-      }
-    }
-
-    function oyunBilgisi() {
-      alert("1 ile 10 arasında bir sayı tahmin et. En az 50 elmas yatırmalısın. İlk doğru tahminde 5 katı kazanırsın, yanlış tahminde yatırdığın elmas kaybolur.");
-    }
-
   </script>
 </body>
 </html>
