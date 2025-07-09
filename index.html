@@ -1,80 +1,107 @@
-<!-- luckgame.html -->
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Şans Oyunu</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #444;
+      background-color: darkgrey;
       color: white;
       text-align: center;
-      padding: 40px;
+      padding: 50px;
+      text-shadow: 1px 1px 2px black;
+      font-size: 20px;
     }
     input, button {
-      font-size: 16px;
+      font-size: 15px;
       padding: 8px;
       margin: 5px;
-      border-radius: 5px;
       border: none;
+      border-radius: 5px;
     }
-    #puan, #tahminSonucu {
+    #guessT, #diamondT {
+      width: 200px;
+      background-color: lightblue;
+      color: black;
+    }
+    #guessB, #diamondB {
+      background-color: lightsalmon;
+    }
+    #puan {
+      font-weight: bold;
       margin-top: 20px;
     }
   </style>
 </head>
 <body>
-  <h1>Şans Oyunu</h1>
-  <p>1 ile 10 arasında bir sayı tahmin et. En az 50 elmas yatırmalısın.</p>
 
-  <input id="guessT" type="number" placeholder="Tahmin (1-10)">
-  <button onclick="tahminYap()">Tahmin Et</button>
-  <br>
-  <input id="elmasT" type="number" placeholder="Yatırılacak Elmas">
-  <button onclick="elmasAyarla()">Yatır</button>
+  <h1>Şans Oyunu</h1>
+  <h5>1 ile 10 Arasında Bir Sayı Tahmin Et</h5>
+
+  <div>
+    <input id="guessT" type="text" placeholder="Tahminin" />
+    <button id="guessB" onclick="TahminiYakala()">Tahmin Yap</button>
+  </div>
+
+  <div>
+    <input id="diamondT" type="text" placeholder="Yatırılan Elmas" />
+    <button id="diamondB" onclick="ElmasMiktariniAyarla()">Elmas Miktarı</button>
+  </div>
 
   <p id="puan">Puan: 500</p>
   <p id="tahminSonucu"></p>
+  <p id="yatirilanElmasMiktari"></p>
 
   <script>
     let puan = 500;
-    let elmas = 0;
-    let dogruSayi = Math.floor(Math.random() * 10) + 1;
+    let yatirilanElmas = 0;
+    let rastgeleSayi = Math.floor(Math.random() * 10) + 1;
 
-    function elmasAyarla() {
-      const giris = parseInt(document.getElementById('elmasT').value);
-      elmas = isNaN(giris) || giris < 50 ? 0 : giris;
-      alert(`Yatırılan elmas: ${elmas}`);
-    }
+    // Global olarak erişilsin diye:
+    window.puan = puan;
 
-    function tahminYap() {
-      const tahmin = parseInt(document.getElementById('guessT').value);
-      const sonucEl = document.getElementById('tahminSonucu');
-
-      if (elmas < 50) {
-        sonucEl.textContent = "En az 50 elmas yatırmalısın.";
-        return;
-      }
+    function TahminiYakala() {
+      const tahmin = parseInt(document.getElementById("guessT").value);
 
       if (isNaN(tahmin) || tahmin < 1 || tahmin > 10) {
-        sonucEl.textContent = "1-10 arası geçerli bir sayı gir.";
+        document.getElementById("tahminSonucu").textContent = "1 ile 10 arasında bir sayı gir.";
+        return;
+      }
+      if (yatirilanElmas < 50) {
+        document.getElementById("tahminSonucu").textContent = "En az 50 elmas yatırmalısın.";
+        return;
+      }
+      if (puan < yatirilanElmas) {
+        document.getElementById("tahminSonucu").textContent = "Yetersiz puan!";
         return;
       }
 
-      if (tahmin === dogruSayi) {
-        const kazanc = elmas * 5;
-        puan += kazanc;
-        sonucEl.textContent = `Tebrikler! ${kazanc} elmas kazandın.`;
-        dogruSayi = Math.floor(Math.random() * 10) + 1;
+      if (tahmin === rastgeleSayi) {
+        puan += yatirilanElmas * 5;
+        rastgeleSayi = Math.floor(Math.random() * 10) + 1;
+        document.getElementById("tahminSonucu").textContent = `Doğru tahmin! Kazandın: ${yatirilanElmas * 5} elmas.`;
       } else {
-        puan -= elmas;
-        sonucEl.textContent = `Yanlış tahmin. ${elmas} elmas kaybettin.`;
+        puan -= yatirilanElmas;
+        document.getElementById("tahminSonucu").textContent = `Yanlış tahmin (${tahmin}). ${yatirilanElmas} elmas kaybettin.`;
       }
 
-      document.getElementById('puan').textContent = "Puan: " + puan;
+      window.puan = puan; // global güncelle
+      document.getElementById("puan").textContent = "Puan: " + puan;
+    }
+
+    function ElmasMiktariniAyarla() {
+      const giris = parseInt(document.getElementById("diamondT").value);
+      if (isNaN(giris) || giris <= 0) {
+        document.getElementById("yatirilanElmasMiktari").textContent = "Geçerli bir elmas miktarı girin.";
+        yatirilanElmas = 0;
+      } else {
+        yatirilanElmas = giris;
+        document.getElementById("yatirilanElmasMiktari").textContent = "Yatırılan Elmas: " + yatirilanElmas;
+      }
     }
   </script>
+
 </body>
 </html>
 
